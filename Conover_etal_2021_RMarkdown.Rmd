@@ -41,9 +41,10 @@ nfix_plot <- ggplot(nfix, aes(x=Day, y=nfix, fill=Treatment)) +
   labs(y="Control-Normalized \nN Fixation Rate") +
   theme_classic() +
   theme(text = element_text(size=20)) +
-  scale_x_continuous(name = "Day", limits = c(-0.1,5.5), breaks = seq(1, 6, by = 1)) +
+  scale_x_continuous(name = "Day", limits = c(-0.1,5.5), breaks = seq(0, 5, by = 1)) +
   scale_y_continuous(breaks = seq(0, 1, by = 0.5)) +
-  scale_fill_grey() +
+  scale_fill_manual(values = c("lightskyblue","darkorange1","firebrick2", "firebrick4")) +
+  #scale_fill_grey() +
   annotate("text", x = 4.5, y = 1.1, label= "B", size = 10)
 
 #create growth curve
@@ -54,10 +55,11 @@ growth_plot <- ggplot(growth, aes(x=Day, y=RFU, color=Treatment, shape=Treatment
   labs(y="\nln(RFU)") +
   theme_classic() +
   theme(text = element_text(size=20)) +
-  theme(axis.line.x = element_blank(), axis.ticks.x = element_blank(), axis.title.x = element_blank(), axis.text.x = element_blank()) +
-  scale_x_continuous(name = "Day", limits = c(-0.1,5.5), breaks = seq(1, 4, by = 1)) +
+  theme(axis.title.x = element_blank()) +
+  scale_x_continuous(limits = c(-0.1,5.5), breaks = seq(0, 5, by = 1)) +
   scale_y_continuous(labels = scales::number_format(accuracy = 0.1), breaks = seq(2, 5, by = 1)) +
-  scale_color_grey() +
+  scale_color_manual(values = c("lightskyblue","darkorange1","firebrick2", "firebrick4")) +
+  #scale_color_grey() +
   annotate("text", x = 4.5, y = 4, label= "A", size = 10)
 
 #put the two plots together to share x-axis
@@ -65,7 +67,7 @@ grid.newpage()
 gridplot <- grid.arrange(growth_plot, nfix_plot)
 
 #save the figure
-#ggsave(filename="Figure2_growth-rate_n-fixation.eps", plot= gridplot, device = "eps", dpi= 400, width = 8, height = 8 )
+#ggsave(filename="Figure2_GrowthRate_NFixation_color.eps", plot= gridplot, device = "eps", dpi= 400, width = 8, height = 8 )
 ```
 
 ##SIP data:
@@ -177,7 +179,7 @@ ggplot(table_for_plot.g2, aes(x=Buoyant_density, y=ProportionScaled, fill=name))
   scale_fill_manual(values = c("firebrick4","firebrick2","darkorange1","lightskyblue")) +
   facet_wrap( ~ seq, ncol = 4, scales = "free")
 
-#ggsave(filename = "all_ASV_distributions.pdf", dpi = 400, width = 13, height = 10, limitsize = FALSE)
+#ggsave(filename = "SuppFigS2_ASV_distributions.pdf", dpi = 400, width = 13, height = 10, limitsize = FALSE)
 ```
 
 ###Plotting bulk DNA density distributions
@@ -193,6 +195,8 @@ ggplot(sample_data(ps_filt_RA), aes(x=Buoyant_density, y=as.numeric(paste(Fracti
   labs(x="Fraction Density (g/ml)", y="DNA in Fraction / Total") +
   guides(fill = guide_legend(reverse = TRUE)) +
   scale_fill_manual(values = c("firebrick4","firebrick2","darkorange1","lightskyblue"))
+
+#ggsave(filename = "SuppFigS1_bulkDNAdensity.pdf", device = "pdf", dpi = 400, width = 10, height = 7, units = "in")
 ```
 
 
@@ -264,15 +268,14 @@ thresh <- df_atomX_boot_all$A[df_atomX_boot_all$A < 0] %>% mean * -3
 ggplot(df_atomX_boot_all, aes(x = A, y = OTU, fill=Day)) +
   #geom_col(stat='identity', width = 0.7, position=position_dodge(0.7), color = "black") +
   geom_bar(stat='identity', width = 0.7, position="dodge", color = "black") +
-  scale_fill_grey() +
   scale_y_discrete(limits = rev(levels(df_atomX_boot_all$OTU))) +
-  #scale_fill_manual(values = c("darkorange1", "firebrick2", "firebrick4")) +
-  #scale_fill_manual(values = c("lightskyblue","darkorange1", "firebrick2", "firebrick4")) +
+  scale_fill_manual(values = c("darkorange1", "firebrick2", "firebrick4")) +
+  #scale_fill_grey() +
   geom_hline(yintercept=0) +
   labs(x='Atom fraction excess', y='ASV') +
   theme_classic() +
   #geom_hline(yintercept=thresh, linetype="dashed") +
   geom_vline(xintercept=thresh, linetype="dashed") +
   theme(axis.title.x = element_text(vjust=-0.5), text = element_text(size=20), axis.text.x=element_text(angle=90, vjust=0.4, hjust=1, size=12))
-#ggsave(filename = "Figure3_atom_fraction_excess.eps", device = "eps", dpi = 400, width = 10, height = 8, units = "in")
+#ggsave(filename = "Figure3_AtomFractionExcess_color.eps", device = "eps", dpi = 400, width = 10, height = 8, units = "in")
 ```
